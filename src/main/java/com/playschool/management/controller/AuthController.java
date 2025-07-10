@@ -1,5 +1,23 @@
 package com.playschool.management.controller;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.playschool.management.dto.request.LoginRequest;
 import com.playschool.management.dto.request.SignupRequest;
 import com.playschool.management.dto.response.JwtResponse;
@@ -11,20 +29,8 @@ import com.playschool.management.repository.RoleRepository;
 import com.playschool.management.repository.UserRepository;
 import com.playschool.management.security.jwt.JwtUtils;
 import com.playschool.management.security.services.UserPrincipal;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -102,25 +108,26 @@ public class AuthController {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "admin" -> {
                         Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-                        break;
-                    case "teacher":
+                    }
+                    case "teacher" -> {
                         Role teacherRole = roleRepository.findByName(RoleName.ROLE_TEACHER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(teacherRole);
-                        break;
-                    case "staff":
+                    }
+                    case "staff" -> {
                         Role staffRole = roleRepository.findByName(RoleName.ROLE_STAFF)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(staffRole);
-                        break;
-                    default:
+                    }
+                    default -> {
                         Role userRole = roleRepository.findByName(RoleName.ROLE_PARENT)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
+                    }
                 }
             });
         }

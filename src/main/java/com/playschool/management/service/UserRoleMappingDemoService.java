@@ -1,12 +1,13 @@
 package com.playschool.management.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.playschool.management.entity.Role;
 import com.playschool.management.entity.RoleName;
 import com.playschool.management.entity.User;
 import com.playschool.management.repository.RoleRepository;
 import com.playschool.management.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserRoleMappingDemoService {
@@ -66,11 +67,11 @@ public class UserRoleMappingDemoService {
             System.out.println("--------|---------|----------");
             
             user.getRoles().forEach(role -> {
-                System.out.println(String.format("%7d | %7d | User '%s' has role '%s'", 
-                    user.getId(), 
-                    role.getId(), 
-                    user.getUsername(), 
-                    role.getName().toString().replace("ROLE_", "")
+                System.out.println("%7d | %7d | User '%s' has role '%s'".formatted(
+                        user.getId(),
+                        role.getId(),
+                        user.getUsername(),
+                        role.getName().toString().replace("ROLE_", "")
                 ));
             });
         }
