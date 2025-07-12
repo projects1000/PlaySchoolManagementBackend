@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.playschool.management.dto.request.LoginRequest;
@@ -32,7 +33,13 @@ import com.playschool.management.security.services.UserPrincipal;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(
+    origins = {"https://playschool-a2z.netlify.app", "http://localhost:3000", "http://localhost:4200"}, 
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+    allowedHeaders = {"*"},
+    allowCredentials = "true",
+    maxAge = 3600
+)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -187,5 +194,16 @@ public class AuthController {
     @PostMapping("/test-cors")
     public ResponseEntity<?> testCors() {
         return ResponseEntity.ok(new MessageResponse("CORS is working correctly!"));
+    }
+    
+    // Explicit OPTIONS handling for CORS preflight requests
+    @RequestMapping(value = "/signin", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleSigninOptions() {
+        return ResponseEntity.ok().build();
+    }
+    
+    @RequestMapping(value = "/signup", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleSignupOptions() {
+        return ResponseEntity.ok().build();
     }
 }
