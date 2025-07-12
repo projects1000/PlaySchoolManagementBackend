@@ -36,8 +36,8 @@ public class WebSecurityConfig {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
-    @Value("${cors.allowed-origins}")
-    private String[] allowedOrigins;
+    @Value("${cors.allowed-origins:http://localhost:3000,http://localhost:4200,https://playschool-a2z.netlify.app}")
+    private String allowedOrigins;
 
     @Autowired
     private AuthTokenFilter authenticationJwtTokenFilter;
@@ -77,7 +77,6 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test/**").permitAll()
                     .requestMatchers("/api/home/**").permitAll()
-                    .requestMatchers("/api/students/public/**").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
                     .anyRequest().authenticated()
             );
@@ -94,13 +93,19 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        
+        // Split the comma-separated origins string
+        String[] origins = allowedOrigins.split(",");
+        configuration.setAllowedOrigins(Arrays.asList(origins));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Cache preflight response for 1 hour
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        
+        System.out.println("CORS Configuration - Allowed Origins: " + Arrays.toString(origins));
         return source;
     }
 }

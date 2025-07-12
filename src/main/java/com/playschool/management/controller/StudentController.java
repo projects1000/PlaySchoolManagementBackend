@@ -149,15 +149,5 @@ public class StudentController {
         return ResponseEntity.ok(count);
     }
     
-    // Public endpoint for testing (no authentication required)
-    @GetMapping("/public/count")
-    public ResponseEntity<Long> getPublicStudentCount() {
-        long count = studentService.getTotalActiveStudents();
-        return ResponseEntity.ok(count);
-    }
-    
-    @GetMapping("/public/test")
-    public ResponseEntity<String> testStudentApi() {
-        return ResponseEntity.ok("Student API is working! Total students: " + studentService.getTotalActiveStudents());
-    }
+    // Production-ready endpoints - all require proper authentication
 }

@@ -34,8 +34,6 @@ hs_err_pid*
 
 # Database credentials and sensitive files
 application-local.properties
-application-dev.properties
-application-prod.properties
 **/application-secret.properties
 .DS_Store
 .DS_Store?
