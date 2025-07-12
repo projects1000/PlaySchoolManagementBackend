@@ -176,4 +176,16 @@ public class AuthController {
                 .body(new MessageResponse("Error creating admin: " + e.getMessage()));
         }
     }
+    
+    // Health check endpoint for Render deployment
+    @PostMapping("/health")
+    public ResponseEntity<?> healthCheck() {
+        return ResponseEntity.ok(new MessageResponse("Backend is healthy and running!"));
+    }
+    
+    // Test CORS endpoint
+    @PostMapping("/test-cors")
+    public ResponseEntity<?> testCors() {
+        return ResponseEntity.ok(new MessageResponse("CORS is working correctly!"));
+    }
 }
