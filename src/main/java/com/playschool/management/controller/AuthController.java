@@ -1,4 +1,11 @@
-package com.playschool.management.controller;
+package cimport org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;school.management.controller;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -205,5 +213,29 @@ public class AuthController {
     @RequestMapping(value = "/signup", method = RequestMethod.OPTIONS)
     public ResponseEntity<?> handleSignupOptions() {
         return ResponseEntity.ok().build();
+    }
+    
+    // Authentication status check endpoint - use this instead of signup for page load
+    @GetMapping("/status")
+    public ResponseEntity<?> checkAuthStatus() {
+        return ResponseEntity.ok(new MessageResponse("Authentication service is available"));
+    }
+    
+    // Get current user info (requires authentication)
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            return ResponseEntity.ok(new JwtResponse(null, // Don't send token back
+                    userPrincipal.getId(),
+                    userPrincipal.getUsername(),
+                    userPrincipal.getEmail(),
+                    userPrincipal.getFirstName(),
+                    userPrincipal.getLastName(),
+                    userPrincipal.getAuthorities().stream()
+                            .map(authority -> authority.getAuthority())
+                            .collect(Collectors.toList())));
+        }
+        return ResponseEntity.status(401).body(new MessageResponse("Not authenticated"));
     }
 }
