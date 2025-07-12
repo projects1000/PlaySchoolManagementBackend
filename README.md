@@ -9,7 +9,7 @@ A comprehensive Spring Boot backend application for managing play school operati
 - **Student Management**: CRUD operations for student records
 - **Role Management**: Support for Admin, Teacher, Parent, and Staff roles
 - **Security**: Spring Security integration with password encryption
-- **Database**: JPA/Hibernate with MySQL support (H2 for testing)
+- **Database**: MySQL/PostgreSQL (Production), H2 (Testing)
 - **RESTful APIs**: Well-structured REST endpoints
 - **Data Validation**: Input validation using Bean Validation
 
@@ -17,7 +17,7 @@ A comprehensive Spring Boot backend application for managing play school operati
 
 - **Framework**: Spring Boot 3.2.0
 - **Security**: Spring Security with JWT
-- **Database**: MySQL (Production), H2 (Testing)
+- **Database**: Spring Data JPA/Hibernate with MySQL/PostgreSQL support
 - **ORM**: Spring Data JPA/Hibernate
 - **Validation**: Spring Boot Validation
 - **Build Tool**: Maven
@@ -69,7 +69,7 @@ src/
 ### Prerequisites
 - Java 17 or higher
 - Maven 3.6+
-- MySQL 8.0+ (for production)
+- MySQL 8.0+ OR PostgreSQL 12+ (for production)
 
 ### Installation
 
@@ -81,16 +81,33 @@ src/
 
 2. **Configure Database**
    
-   Update `src/main/resources/application.properties`:
+   **For MySQL** (update `src/main/resources/application.properties`):
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/playschool_db
    spring.datasource.username=your_username
    spring.datasource.password=your_password
    ```
+   
+   **For PostgreSQL** (use `application-postgresql.properties` or set profile):
+   ```properties
+   spring.profiles.active=postgresql
+   # OR
+   spring.datasource.url=jdbc:postgresql://localhost:5432/playschool_db
+   spring.datasource.username=postgres
+   spring.datasource.password=your_password
+   ```
 
-3. **Create MySQL Database**
+3. **Create Database**
+   
+   **For MySQL:**
    ```sql
    CREATE DATABASE playschool_db;
+   ```
+   
+   **For PostgreSQL:**
+   ```sql
+   CREATE DATABASE playschool_db;
+   # Connect: psql -U postgres
    ```
 
 4. **Build and Run**
