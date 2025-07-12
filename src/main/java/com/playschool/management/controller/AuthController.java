@@ -137,4 +137,43 @@ public class AuthController {
         
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+    
+    @PostMapping("/test-signin")
+    public ResponseEntity<?> testAuthEndpoint() {
+        return ResponseEntity.ok(new MessageResponse("Auth endpoint is working! Backend authentication is ready."));
+    }
+    
+    // Quick admin creation for testing (REMOVE IN PRODUCTION!)
+    @PostMapping("/create-admin")
+    public ResponseEntity<?> createAdminUser() {
+        try {
+            // Check if admin already exists
+            if (userRepository.existsByUsername("admin")) {
+                return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Admin user already exists!"));
+            }
+            
+            // Create admin user
+            User adminUser = new User("admin", 
+                                    "admin@playschool.com", 
+                                    encoder.encode("admin123"), 
+                                    "Admin", 
+                                    "User");
+            
+            adminUser.setPhoneNumber("1234567890");
+            
+            Set<Role> roles = new HashSet<>();
+            Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                    .orElseThrow(() -> new RuntimeException("Error: Admin role not found."));
+            roles.add(adminRole);
+            
+            adminUser.setRoles(roles);
+            userRepository.save(adminUser);
+            
+            return ResponseEntity.ok(new MessageResponse("Admin user created successfully! Username: admin, Password: admin123"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(new MessageResponse("Error creating admin: " + e.getMessage()));
+        }
+    }
 }
