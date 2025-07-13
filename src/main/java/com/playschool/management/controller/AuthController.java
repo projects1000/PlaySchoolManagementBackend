@@ -231,4 +231,16 @@ public class AuthController {
         }
         return ResponseEntity.status(401).body(new MessageResponse("Not authenticated"));
     }
+    
+    // Simple health check endpoint (faster than the other one)
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("pong");
+    }
+    
+    // Server time endpoint for debugging
+    @GetMapping("/time")
+    public ResponseEntity<?> getServerTime() {
+        return ResponseEntity.ok(new MessageResponse("Server time: " + java.time.LocalDateTime.now()));
+    }
 }
